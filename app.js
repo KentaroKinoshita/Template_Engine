@@ -9,6 +9,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { type } = require("os");
 
 
 // Write code to use inquirer to gather information about the development team members,
@@ -37,7 +38,41 @@ function askQuestion() {
         choices: ["Engineer", "Intern", "Manager"]
     }
 ]).then(function({name, id, email, role}) {
-    console.table({name, id, email, role})
+    switch (role) {
+        case "Engineer":
+            inquirer
+            .prompt({
+                name: "github",
+                type: "input",
+                message: "Input your github account"
+            }).then(function({github}) {
+                console.table({name, id, email, github})
+                render({name, id, email, github})
+            })
+            break
+        case "Manager":
+            inquirer
+            .prompt({
+                name: "officeNumber",
+                type: "input",
+                message: "Input your office number"
+            }).then(function({officeNumber}){
+                renderManager(name, id, email, officeNumber)
+                console.log({name, id, email, officeNumber})
+            })
+            break
+        case "Intern":
+            inquirer
+            .prompt({
+                name: "school",
+                type: "input",
+                message: "Input your school"
+            }).then(function({school}){
+                renderIntern(name, id, email, school)
+                console.log({name, id, email, school})
+            })
+            break
+    }
 })
 }
 
