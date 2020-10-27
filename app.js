@@ -93,7 +93,9 @@ function addOtherMembers() {
                 if (addOtherMembers) {
                     askQuestions()
                 } else {
-                    render(employees)
+                    console.log(employees)
+                    let templateDiv = render(employees)
+                    renderMain(templateDiv)     
                 }
             }
         )
@@ -104,6 +106,23 @@ function addOtherMembers() {
 }
 
 askQuestions();
+
+function renderMain(templateDiv) {
+    let mainTemplate = fs.readFileSync(path.resolve(__dirname, "templates", "main.html"), "utf8")
+    var mainHtml = ""
+    mainHtml = mainHtml + mainTemplate.replace(/{{ team }}/g, render.templete)
+    let file = path.join(outputPath);
+    // console.log(file);
+    fs.writeFile(file, templateDiv, function(err) {
+        if (err) {
+            throw new Error(err)
+        }
+        console.log('done writing file')
+    })
+}
+
+
+
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
