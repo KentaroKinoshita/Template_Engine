@@ -14,7 +14,9 @@ const { type } = require("os");
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-function askQuestion() {
+var employees = [];
+
+function askQuestions() {
     inquirer
     .prompt([{
         name: "name",
@@ -47,7 +49,9 @@ function askQuestion() {
                 message: "Input your github account"
             }).then(function({github}) {
                 console.table({name, id, email, github})
-                render({name, id, email, github})
+                let engineer = new Engineer(name, id, email, github);
+                employees.push(engineer);
+                addOtherMembers();
             })
             break
         case "Manager":
@@ -57,8 +61,9 @@ function askQuestion() {
                 type: "input",
                 message: "Input your office number"
             }).then(function({officeNumber}){
-                renderManager(name, id, email, officeNumber)
-                console.log({name, id, email, officeNumber})
+                let manager = new Manager(name, id, email, officeNumber)
+                employees.push(manager)
+                addOtherMembers();
             })
             break
         case "Intern":
@@ -68,15 +73,37 @@ function askQuestion() {
                 type: "input",
                 message: "Input your school"
             }).then(function({school}){
-                renderIntern(name, id, email, school)
-                console.log({name, id, email, school})
+                let intern = new Intern(name, id, email, school)
+                employees.push(intern)
+                addOtherMembers();
             })
             break
     }
 })
 }
 
-askQuestion();
+function addOtherMembers() {
+    inquirer.prompt({
+            type: "confirm",
+            message: "Add other Team Members?",
+            name: "addOtherMembers"
+        }).then(
+            function({ addOtherMembers }) {
+                console.log("add other members", addOtherMembers)
+                if (addOtherMembers) {
+                    askQuestions()
+                } else {
+                    render(employees)
+                }
+            }
+        )
+        .catch(err => {
+            console.log("Error adding other members", err)
+            throw err
+        })
+}
+
+askQuestions();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
