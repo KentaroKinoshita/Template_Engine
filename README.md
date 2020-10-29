@@ -14,7 +14,7 @@ Steps to install application:
 4. HTML Generated
 
 ```
-git clone git@github.com:kqarlos/team-profile-generator.git
+git clone 
 npm instal
 node server.js
 
